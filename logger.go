@@ -1,6 +1,7 @@
 package logrus
 
 import (
+	"context"
 	"io"
 	"os"
 	"sync"
@@ -102,6 +103,13 @@ func (logger *Logger) WithFields(fields Fields) *Entry {
 	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithFields(fields)
+}
+
+// Adds a Context to the log entry.
+func (logger *Logger) WithContext(ctx context.Context) *Entry {
+	entry := logger.newEntry()
+	defer logger.releaseEntry(entry)
+	return entry.WithContext(ctx)
 }
 
 // Add an error as single field to the log entry.  All it does is call

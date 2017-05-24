@@ -2,6 +2,7 @@ package logrus
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -42,6 +43,10 @@ type Entry struct {
 
 	// When formatter is called in entry.log(), an Buffer may be set to entry
 	Buffer *bytes.Buffer
+
+	// Use WithContext to include context.Context with a log. If you set up a ContextFielder
+	// with the logger, then those fields will be pulled from Context.
+	Context context.Context
 }
 
 func NewEntry(logger *Logger) *Entry {
@@ -82,7 +87,16 @@ func (entry *Entry) WithFields(fields Fields) *Entry {
 	for k, v := range fields {
 		data[k] = v
 	}
-	return &Entry{Logger: entry.Logger, Data: data}
+	return &Entry{Logger: entry.Logger, Data: data, Context: entry.Context}
+}
+
+// Add a Context to this Entry
+func (entry *Entry) WithContext(ctx context.Context) *Entry {
+	data := make(Fields, len(entry.Data))
+	for k, v := range entry.Data {
+		data[k] = v
+	}
+	return &Entry{Logger: entry.Logger, Data: data, Context: ctx}
 }
 
 // This function is not declared with a pointer value because otherwise

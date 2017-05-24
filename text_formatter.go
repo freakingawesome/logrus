@@ -73,6 +73,7 @@ func (f *TextFormatter) init(entry *Entry) {
 
 func (f *TextFormatter) Format(entry *Entry) ([]byte, error) {
 	var b *bytes.Buffer
+	// TODO: Add ContextFielder
 	keys := make([]string, 0, len(entry.Data))
 	for k := range entry.Data {
 		keys = append(keys, k)

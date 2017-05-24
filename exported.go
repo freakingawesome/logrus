@@ -1,6 +1,7 @@
 package logrus
 
 import (
+	"context"
 	"io"
 )
 
@@ -70,6 +71,15 @@ func WithField(key string, value interface{}) *Entry {
 // or Panic on the Entry it returns.
 func WithFields(fields Fields) *Entry {
 	return std.WithFields(fields)
+}
+
+// WithContext creates an entry from the standard logger and adds a Context
+// to it.
+//
+// Note that it doesn't log until you call Debug, Print, Info, Warn, Fatal
+// or Panic on the Entry it returns.
+func WithContext(ctx context.Context) *Entry {
+	return std.WithContext(ctx)
 }
 
 // Debug logs a message at level Debug on the standard logger.

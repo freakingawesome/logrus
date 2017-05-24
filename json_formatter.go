@@ -39,10 +39,17 @@ type JSONFormatter struct {
 	//    },
 	// }
 	FieldMap FieldMap
+
+	// ContextFielder is used to pull known fields from Context.Value() into
+	// the field map.
+	ContextFielder ContextFielder
 }
 
 func (f *JSONFormatter) Format(entry *Entry) ([]byte, error) {
 	data := make(Fields, len(entry.Data)+3)
+	if f.ContextFielder != nil && entry.Context != nil {
+		f.ContextFielder.SetFieldsFromContext(entry.Context, data)
+	}
 	for k, v := range entry.Data {
 		switch v := v.(type) {
 		case error:
